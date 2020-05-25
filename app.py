@@ -32,7 +32,7 @@ def home():
 @app.route('/preprocessing', methods=['GET', 'POST'])
 def preprocessing():
     if request.method == 'POST':
-        filename = request.form['filename']
+        filename = request.form['customFile']
         # print("filename: {}".format(filename))
         X_train, X_test, y_train, y_test, output = pre_train(filename)
         global res

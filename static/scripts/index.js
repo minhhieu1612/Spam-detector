@@ -1,5 +1,5 @@
 // import axios from "axios";
-const baseURL = "http://localhost:5000/";
+const baseURL = "http://localhost:5000";
 function init_table(options) {
   options = options || {};
   var csv_path = options.csv_path || "";
@@ -111,11 +111,23 @@ $(() => {
   };
   showStep();
 
+  // change tab predict
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+    var target = $(e.target).attr("href"); // activated tab
+    $("#predictLabel").val("");
+    $("#predictLabel").html("");
+    $("#filename").val("");
+    $('label[for="filename"]').html("Predict file");
+    console.log(target);
+    $("#predict_section")[0].reset();
+  });
+
   // review dataset
-  const reviewFile = (element,fileInput) => {
+  const reviewFile = (element, fileInput) => {
     $(element).click((e) => {
       $("#table-review").html("");
-      const csvPath = (window.URL || window.webkitURL).createObjectURL(fileInput);
+      const file = $(fileInput).prop("files")[0];
+      const csvPath = (window.URL || window.webkitURL).createObjectURL(file);
       init_table({
         csv_path: csvPath,
         element: "#table-review",
@@ -131,20 +143,11 @@ $(() => {
       });
       $("#modalReview").modal("show");
     });
-  }
-
-  reviewFile("#review", $(fileInput).prop("files")[0]);
-  reviewFile("#reviewFileRes",{{predict_result if res['predict_result'] != None and res['predict_label'] == '' else
-  ''}});
-
-  // change tab predict
-  $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
-    var target = $(e.target).attr("href"); // activated tab
-    $("#predictLabel").val("");
-    $("#predictLabel").html("");
-    $("#filename").val("");
-    $('label[for="filename"]').html("Predict file");
-    console.log(target);
-    $("#predict_section")[0].reset();
-  });
+  };
+  //   let filePredict = {{
+  //     res['predict_result'] if res['predict_result'] != None and res['predict_label'] == '' else
+  //   ''
+  // }};
+  reviewFile("#review", "#customFile");
+  reviewFile("#reviewFileRes", "#filename");
 });
