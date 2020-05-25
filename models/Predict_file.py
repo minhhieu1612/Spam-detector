@@ -44,6 +44,9 @@ class Predict_file:
         print(prediction)
         export_file(self.path, prediction)
 
+    def LSTM(self):
+        return None
+
     def Run_All(self):
         return None
 

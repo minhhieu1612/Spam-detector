@@ -1,7 +1,7 @@
 from models import Measure
 from models import preprocessings
 from sklearn.metrics import precision_recall_fscore_support as score
-from sklearn import feature_extraction, model_selection, naive_bayes, metrics, svm
+from sklearn import svm
 # from sklearn.metrics import f1_score, accuracy_score
 # from sklearn import metrics, feature_extraction
 # from sklearn.naive_bayes import GaussianNB
@@ -11,6 +11,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.externals import joblib
+from keras.models import Sequential
+from keras.layers import Embedding, LSTM as LSTM_lib
+from keras.layers import Dense
 
 
 def DecisionTree(X_train, X_test, y_train, y_test):
@@ -99,6 +102,33 @@ def SVM(X_train, X_test, y_train, y_test):
     return Measure.Measure(acc_score, precision, recall, fscore)
 
 
+def LSTM(X_train_seq, X_test_seq, y_train, y_test):
+    model = Sequential()
+    max_words = 13698
+    max_len = 200
+    model.add(Embedding(max_words, 50, input_length=max_len))
+    model.add(LSTM_lib(128, dropout=0.25, recurrent_dropout=0.25))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+
+    print('Train model')
+    model.fit(X_train_seq, y_train,
+              batch_size=32,
+              epochs=3,
+              validation_data=(X_test_seq, y_test))
+    y_pred = model.predict_classes(X_test_seq)
+
+    joblib.dump(LSTM, 'LSTM.pkl')
+    acc_score = model.evaluate(X_test_seq, y_test, batch_size=32)
+    precision, recall, fscore, support = score(
+        y_test, y_pred, average='weighted')
+    target_names = ['Non-Spam', 'Spam']
+    print(classification_report(y_test, y_pred, target_names=target_names))
+    return Measure.Measure(acc_score, precision, recall, fscore)
+
+
 class Trainers:
     def __init__(self, path):
         self.path = path
@@ -123,6 +153,11 @@ class Trainers:
             self.path)
         return SVM(X_train, X_test, y_train, y_test)
 
+    def LSTM(self):
+        X_train_seq, X_test_seq, y_train, y_test, max_words, max_len = preprocessings.for_dataset_lstm(
+            self.path)
+        return LSTM(X_train_seq, X_test_seq, y_train, y_test)
+
     def Run_All(self):
         return [
             {
@@ -140,6 +175,10 @@ class Trainers:
             {
                 'trainer': 'SVM',
                 'result': self.SVM().getObj()
+            },
+            {
+                'trainer': 'LSTM',
+                'result': self.LSTM().getObj()
             },
         ]
 

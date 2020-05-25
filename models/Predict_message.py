@@ -5,6 +5,7 @@ from sklearn.externals import joblib
 class Predict_message:
     def __init__(self, string):
         self.string = preprocessings.for_message(string)
+        self.string_lstm = preprocessings.for_dataset_lstm(string)
 
     def KNN(self):
         modelscorev2 = joblib.load('KNN.pkl', mmap_mode='r')
@@ -27,6 +28,12 @@ class Predict_message:
     def SVM(self):
         svm = joblib.load('SVM.pkl', mmap_mode='r')
         prediction = svm.predict(self.string)
+        print('ham' if prediction == 0 else 'spam')
+        return prediction
+
+    def LSTM(self):
+        lstm = joblib.load('LSTM.pkl', mmap_mode='r')
+        prediction = lstm.predict(self.string_lstm)
         print('ham' if prediction == 0 else 'spam')
         return prediction
 
