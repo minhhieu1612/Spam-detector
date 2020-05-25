@@ -1,5 +1,5 @@
 from models import Measure
-from models import preprocessing_data
+from models import preprocessings
 from sklearn.metrics import precision_recall_fscore_support as score
 from sklearn import feature_extraction, model_selection, naive_bayes, metrics, svm
 # from sklearn.metrics import f1_score, accuracy_score
@@ -12,11 +12,10 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.externals import joblib
 
-dtc = DecisionTreeClassifier(min_samples_split=7, random_state=None)
-# huấn luyện mô hình bằng tập train và test
-
 
 def DecisionTree(X_train, X_test, y_train, y_test):
+    # huấn luyện mô hình bằng tập train và test
+    dtc = DecisionTreeClassifier(min_samples_split=7, random_state=None)
     dtc.fit(X_train, y_train)
     # dự đoán cho tập dữ liệu test
     y_dtc = dtc.predict(X_test)
@@ -105,22 +104,22 @@ class Trainers:
         self.path = path
 
     def KNN(self):
-        X_train, X_test, y_train, y_test, output = preprocessing_data.preprocessing(
+        X_train, X_test, y_train, y_test, output = preprocessings.for_dataset(
             self.path)
         return KNN(X_train, X_test, y_train, y_test)
 
     def DecisionTree(self):
-        X_train, X_test, y_train, y_test, output = preprocessing_data.preprocessing(
+        X_train, X_test, y_train, y_test, output = preprocessings.for_dataset(
             self.path)
         return DecisionTree(X_train, X_test, y_train, y_test)
 
     def Naive_bayes(self):
-        X_train, X_test, y_train, y_test, output = preprocessing_data.preprocessing(
+        X_train, X_test, y_train, y_test, output = preprocessings.for_dataset(
             self.path)
         return Naive_Bayes(X_train, X_test, y_train, y_test)
 
     def SVM(self):
-        X_train, X_test, y_train, y_test, output = preprocessing_data.preprocessing(
+        X_train, X_test, y_train, y_test, output = preprocessings.for_dataset(
             self.path)
         return SVM(X_train, X_test, y_train, y_test)
 

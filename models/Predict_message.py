@@ -1,10 +1,10 @@
-from models import preprocessing_message
+from models import preprocessings
 from sklearn.externals import joblib
 
 
 class Predict_message:
     def __init__(self, string):
-        self.string = preprocessing_message.predict_preprocessing(string)
+        self.string = preprocessings.for_message(string)
 
     def KNN(self):
         modelscorev2 = joblib.load('KNN.pkl', mmap_mode='r')

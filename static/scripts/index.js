@@ -68,6 +68,10 @@ $(() => {
     $('label[for="customFile"]').html(e.target.value);
   });
 
+  $("#filename").change((e) => {
+    $('label[for="filename"]').html(e.target.value);
+  });
+
   const valSelected = $("#model").attr("value");
   $("#model").val(valSelected);
   var imgModel = valSelected + "-train";
@@ -125,5 +129,16 @@ $(() => {
       },
     });
     $("#modalReview").modal("show");
+  });
+
+  // change tab predict
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+    var target = $(e.target).attr("href"); // activated tab
+    $("#predictLabel").val("");
+    $("#predictLabel").html("");
+    $("#filename").val("");
+    $('label[for="filename"]').html("Predict file");
+    console.log(target);
+    $("#predict_section")[0].reset();
   });
 });

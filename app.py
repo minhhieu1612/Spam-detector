@@ -3,9 +3,9 @@ from flask import Flask, render_template, url_for, request
 import json
 # Models, utils, helpers, services
 from models.Trainers import Trainers
+from models.preprocessings import for_dataset as pre_train
 from models.Predict_message import Predict_message
-from models.preprocessing_data import preprocessing as pre_train
-from models.Predict_message import Predict_message
+from models.Predict_file import Predict_file
 app = Flask(__name__)
 
 RESPONSE_DEFAULT = {
@@ -81,11 +81,15 @@ def predict():
     if request.method == 'POST':
         global res
         message = request.form['predictLabel']
+        fileName = request.form['filename']
         trainSelected = res['train_id']
-        print(message)
         print(trainSelected)
-        predict_result = selectModel(
-            trainSelected, Predict_message, message)()
+        predict_result = None
+        if message != '':
+            predict_result = selectModel(
+                trainSelected, Predict_message, message)()
+        else:
+            selectModel(trainSelected, Predict_file, fileName)()
         res['predict_label'] = message
         res['predict_result'] = predict_result
         return render_template('home.html', res=res)

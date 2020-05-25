@@ -206,18 +206,60 @@
               class="pl-3"
               id="predict_section"
             >
-              <div class="form-group">
-                <label for="message">Message:</label>
-                <textarea
-                  class="form-control"
-                  rows="3"
-                  id="message"
-                  name="predictLabel"
-                  required
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    data-toggle="tab"
+                    href="#predictMessage"
+                    >Message</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#predictFile"
+                    >File</a
+                  >
+                </li>
+              </ul>
+              <div class="tab-content">
+                <div
+                  id="predictMessage"
+                  class="container tab-pane px-0 pt-3 pb-1 fade show active"
                 >
-{{res['predict_label'] if res['predict_result'] != None else ''}}</textarea
+                  <div class="form-group">
+                    <label for="predictLabel">Message:</label>
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      id="predictLabel"
+                      name="predictLabel"
+                    >
+                  {{res['predict_label'] if res['predict_result'] != None else ''}}</textarea
+                    >
+                  </div>
+                </div>
+                <div
+                  id="predictFile"
+                  class="container tab-pane px-0 pt-3 pb-5 fade"
                 >
+                  <div class="form-group">
+                    <label for="message">File:</label>
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        id="filename"
+                        name="filename"
+                        accept=".csv"
+                      />
+                      <label class="custom-file-label" for="filename"
+                        >Predict file</label
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <button type="submit" class="btn btn-primary">Predict</button>
               {% if res['predict_result'] != None %}
               <span class="predict-result">

@@ -1,18 +1,24 @@
 from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 import pickle
-# nltk.download('wordnet')
-# from nltk.stem import WordNetLemmatizer
-# from nltk.corpus import wordnet as wn
-# nltk.download('punkt')
-# nltk.download("stopwords")
-from nltk.corpus import stopwords
-import pandas as pd
 from models import helpers
 
 
-def preprocessing(path):
-    training_dataset = pd.read_csv(path, encoding="ISO-8859-1")
+def for_message(message):
+    data = [helpers.clean_data(message)]
+
+    loaded_vectorizer = pickle.load(open('vectorizer.pickle', 'rb'))
+    X = loaded_vectorizer.transform(data)
+
+    # Performing test train Split
+
+    return X
+
+
+def for_dataset(path_file):
+    training_dataset = pd.read_csv(path_file, encoding="ISO-8859-1")
     # print(training_dataset.head(10))
     training_dataset.drop(
         ["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"], axis=1, inplace=True)
@@ -46,3 +52,16 @@ def preprocessing(path):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.30, train_size=0.70, random_state=None)
     return X_train, X_test, y_train, y_test, output
+
+
+def for_file(path_file):
+    data_test = pd.read_csv(path_file, encoding="ISO-8859-1")
+    print(data_test.head(10))
+    for index in range(0, len(data_test["message"])):
+        data_test.loc[index, "message"] = helpers.clean_data(
+            data_test["message"].iloc[index])
+
+    # Initialising Count Vectorizer
+    loaded_vectorizer = pickle.load(open('vectorizer.pickle', 'rb'))
+    X = loaded_vectorizer.transform(data_test["message"])
+    return X
