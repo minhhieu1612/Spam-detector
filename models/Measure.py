@@ -7,8 +7,8 @@ class Measure:
 
     def getObj(self):
         return {
-            'acc_score': self.acc_score,
-            'prec_score': self.prec_score,
-            'recall_measure': self.recall_measure,
-            'f1_measure': self.f1_measure
+            'accuracy': self.acc_score,
+            'precision': self.prec_score,
+            'recall': self.recall_measure,
+            'f1_score': self.f1_measure
         }

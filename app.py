@@ -82,6 +82,7 @@ def predict():
         global res
         message = request.form['predictLabel']
         fileName = request.form['filename']
+        # fileResponse = request.files['filename']
         trainSelected = res['train_id']
         print(trainSelected)
         predict_result = None
@@ -90,6 +91,7 @@ def predict():
                 trainSelected, Predict_message, message)()
         else:
             selectModel(trainSelected, Predict_file, fileName)()
+            predict_result = fileName
         res['predict_label'] = message
         res['predict_result'] = predict_result
         return render_template('home.html', res=res)

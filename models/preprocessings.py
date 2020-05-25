@@ -50,7 +50,7 @@ def for_dataset(path_file):
     pickle.dump(vectorizer, open(vec_file, 'wb'))
     # Performing test train Split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.30, train_size=0.70, random_state=None)
+        X, y, test_size=0.20, train_size=0.80, random_state=None)
     return X_train, X_test, y_train, y_test, output
 
 

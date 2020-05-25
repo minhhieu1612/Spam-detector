@@ -112,24 +112,30 @@ $(() => {
   showStep();
 
   // review dataset
-  $("#review").click((e) => {
-    const file = $("#customFile").prop("files")[0];
-    const csvPath = (window.URL || window.webkitURL).createObjectURL(file);
-    init_table({
-      csv_path: csvPath,
-      element: "#table-review",
-      datatables_options: {
-        paging: false,
-        ordering: false,
-        info: false,
-        columnDefs: [
-          { width: "20%", targets: 0 },
-          { width: "120%", targets: 1 },
-        ],
-      },
+  const reviewFile = (element,fileInput) => {
+    $(element).click((e) => {
+      $("#table-review").html("");
+      const csvPath = (window.URL || window.webkitURL).createObjectURL(fileInput);
+      init_table({
+        csv_path: csvPath,
+        element: "#table-review",
+        datatables_options: {
+          paging: false,
+          ordering: false,
+          info: false,
+          columnDefs: [
+            { width: "20%", targets: 0 },
+            { width: "120%", targets: 1 },
+          ],
+        },
+      });
+      $("#modalReview").modal("show");
     });
-    $("#modalReview").modal("show");
-  });
+  }
+
+  reviewFile("#review", $(fileInput).prop("files")[0]);
+  reviewFile("#reviewFileRes",{{predict_result if res['predict_result'] != None and res['predict_label'] == '' else
+  ''}});
 
   // change tab predict
   $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
