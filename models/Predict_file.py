@@ -1,6 +1,7 @@
 import pandas as pd
 from models import preprocessings
-from sklearn.externals import joblib
+import joblib
+from tensorflow.keras.models import load_model
 
 
 def export_file(path, prediction):
@@ -45,7 +46,11 @@ class Predict_file:
         export_file(self.path, prediction)
 
     def LSTM(self):
-        return None
+        x = preprocessings.for_file_lstm(self.path)
+        lstm_model = load_model('51_acc_language_model.h5')
+        prediction = lstm_model.predict_classes(x)
+        print(prediction)
+        export_file(self.path, prediction)
 
     def Run_All(self):
         return None

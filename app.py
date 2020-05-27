@@ -1,6 +1,7 @@
 # Libraries, modules
 from flask import Flask, render_template, url_for, request
 import json
+import numpy as np
 # Models, utils, helpers, services
 from models.Trainers import Trainers
 from models.preprocessings import for_dataset as pre_train
@@ -35,6 +36,14 @@ def preprocessing():
         filename = request.form['customFile']
         # print("filename: {}".format(filename))
         X_train, X_test, y_train, y_test, output = pre_train(filename)
+        ham_train = np.count_nonzero(y_train == 0)
+        spam_train = np.count_nonzero(y_train == 1)
+        ham_test = np.count_nonzero(y_test == 0)
+        spam_test = np.count_nonzero(y_test == 1)
+        print(ham_train)
+        print(spam_train)
+        print(ham_test)
+        print(spam_test)
         global res
         res['pre_train_data'] = output
         return render_template('home.html', res=res)
@@ -48,7 +57,7 @@ def selectModel(i, option, devDependcy):
         0: trainer.DecisionTree,
         1: trainer.KNN,
         2: trainer.Naive_bayes,
-        3: 'LSTM',
+        3: trainer.LSTM,
         4: trainer.SVM
     }
     return switcher.get(int(i), trainer.Run_All)
@@ -84,7 +93,7 @@ def predict():
         fileName = request.form['filename']
         # fileResponse = request.files['filename']
         trainSelected = res['train_id']
-        print(trainSelected)
+        print(message)
         predict_result = None
         if message != '':
             predict_result = selectModel(

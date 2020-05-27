@@ -1,1 +1,6 @@
 *.pkl
+*.pickle
+*.h5
+models/__pycache__
+*.pyc
+output_file.csv

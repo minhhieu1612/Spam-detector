@@ -1,11 +1,12 @@
 from models import preprocessings
-from sklearn.externals import joblib
+import joblib
+from tensorflow.keras.models import load_model
 
 
 class Predict_message:
     def __init__(self, string):
         self.string = preprocessings.for_message(string)
-        self.string_lstm = preprocessings.for_dataset_lstm(string)
+        self.string_lstm = preprocessings.for_message_lstm(string)
 
     def KNN(self):
         modelscorev2 = joblib.load('KNN.pkl', mmap_mode='r')
@@ -32,8 +33,9 @@ class Predict_message:
         return prediction
 
     def LSTM(self):
-        lstm = joblib.load('LSTM.pkl', mmap_mode='r')
-        prediction = lstm.predict(self.string_lstm)
+        lstm_model = load_model('51_acc_language_model.h5')
+        prediction = lstm_model.predict_classes(self.string_lstm)
+        print(prediction)
         print('ham' if prediction == 0 else 'spam')
         return prediction
 
