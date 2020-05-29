@@ -16,6 +16,7 @@ RESPONSE_DEFAULT = {
     'chart_result': None,
     'predict_label': '',
     'predict_result': None,
+    'predict_file_result': None,
     'chart_preprocessing': None
 }
 
@@ -101,8 +102,10 @@ def predict():
         if message != '':
             predict_result = selectModel(
                 trainSelected, Predict_message, message)()
+            res['predict_file_result'] = None
         else:
-            selectModel(trainSelected, Predict_file, fileName)()
+            res['predict_file_result'] = selectModel(
+                trainSelected, Predict_file, fileName)()
             predict_result = fileName
         res['predict_label'] = message.lstrip()
         res['predict_result'] = predict_result

@@ -9,8 +9,10 @@ def export_file(path, prediction):
     data_test['class'] = prediction
     data_test['class'] = data_test['class'].replace(
         [1, 0],  ["spam", "ham"])
-    data_test.to_csv(path, index=False)
+    new_path = path.split(".csv")[0] + "_predict.csv"
+    data_test.to_csv(new_path, index=False)
     print(data_test)
+    return data_test.values.tolist()
 
 
 class Predict_file:
@@ -22,35 +24,35 @@ class Predict_file:
         modelscorev2 = joblib.load('KNN.pkl', mmap_mode='r')
         prediction = modelscorev2.predict(x)
         print(prediction)
-        export_file(self.path, prediction)
+        return export_file(self.path, prediction)
 
     def DecisionTree(self):
         x = preprocessings.for_file(self.path)
         decisionTree = joblib.load('DecisionTree.pkl', mmap_mode='r')
         prediction = decisionTree.predict(x)
         print(prediction)
-        export_file(self.path, prediction)
+        return export_file(self.path, prediction)
 
     def Naive_bayes(self):
         x = preprocessings.for_file(self.path)
         NB = joblib.load('NB.pkl', mmap_mode='r')
         prediction = NB.predict(x)
         print(prediction)
-        export_file(self.path, prediction)
+        return export_file(self.path, prediction)
 
     def SVM(self):
         x = preprocessings.for_file(self.path)
         svm = joblib.load('SVM.pkl', mmap_mode='r')
         prediction = svm.predict(x)
         print(prediction)
-        export_file(self.path, prediction)
+        return export_file(self.path, prediction)
 
     def LSTM(self):
         x = preprocessings.for_file_lstm(self.path)
         lstm_model = load_model('51_acc_language_model.h5')
         prediction = lstm_model.predict_classes(x)
         print(prediction)
-        export_file(self.path, prediction)
+        return export_file(self.path, prediction)
 
     def Run_All(self):
         return None
