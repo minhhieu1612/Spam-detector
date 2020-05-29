@@ -15,7 +15,8 @@ RESPONSE_DEFAULT = {
     'train_result': None,
     'chart_result': None,
     'predict_label': '',
-    'predict_result': None
+    'predict_result': None,
+    'chart_preprocessing': None
 }
 
 res = RESPONSE_DEFAULT
@@ -36,15 +37,17 @@ def preprocessing():
         filename = request.form['customFile']
         # print("filename: {}".format(filename))
         X_train, X_test, y_train, y_test, output = pre_train(filename)
-        ham_train = np.count_nonzero(y_train == 0)
-        spam_train = np.count_nonzero(y_train == 1)
-        ham_test = np.count_nonzero(y_test == 0)
-        spam_test = np.count_nonzero(y_test == 1)
-        print(ham_train)
-        print(spam_train)
-        print(ham_test)
-        print(spam_test)
         global res
+        res['chart_preprocessing'] = [{
+            'type': 'Train',
+            'ham': np.count_nonzero(y_train == 0),
+            'spam': np.count_nonzero(y_train == 1)
+        },
+            {
+            'type': 'Test',
+            'ham': np.count_nonzero(y_test == 0),
+            'spam': np.count_nonzero(y_test == 1)
+        }]
         res['pre_train_data'] = output
         return render_template('home.html', res=res)
     return render_template('home.html', res=res)
@@ -101,7 +104,7 @@ def predict():
         else:
             selectModel(trainSelected, Predict_file, fileName)()
             predict_result = fileName
-        res['predict_label'] = message
+        res['predict_label'] = message.lstrip()
         res['predict_result'] = predict_result
         return render_template('home.html', res=res)
 

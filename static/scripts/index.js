@@ -103,7 +103,7 @@ $(() => {
           setTimeout(() => {
             $(arrLiStep[index]).addClass("done");
             $("#connector-preprocessing").css({ display: "block" });
-            $("#table_dataset").fadeIn("5000");
+            $(".pre-train-dataset").fadeIn("5000");
           }, 1000);
         }
       }, arrTimeout[index]);
@@ -149,5 +149,5 @@ $(() => {
   //   ''
   // }};
   reviewFile("#review", "#customFile");
-  reviewFile("#reviewFileRes", "#filename");
+  reviewFile("#previewFilePredict", "#filename");
 });

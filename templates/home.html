@@ -95,6 +95,7 @@
 
         <!-- Progress -->
         {% if res['pre_train_data'] != None %}
+        <hr />
         <section class="preprocessing row" id="preprocessing_section">
           <div class="col-md-4 mb-3 mt-4">
             <h3>Preprocessing progress</h3>
@@ -110,36 +111,57 @@
           </div>
           <div class="col-md-6 mb-3 mt-4">
             {% if res['pre_train_data'] != None %}
+
             <div class="pre-train-dataset">
-              <table
-                id="table_dataset"
-                class="table table-responsive-lg table-bordered table-striped table-hoverd"
+              <button
+                data-toggle="modal"
+                data-target="#modalPreprocessing"
+                type="button"
+                class="btn btn-secondary mb-4"
               >
-                <thead>
-                  <tr>
-                    <th width="10%">.NO</th>
-                    <th width="65%">Message</th>
-                    <th width="10%">Label</th>
-                    <th width="15%">Num Class</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for result in res['pre_train_data'][:5] %}
-                  <tr>
-                    <td>{{loop.index}}</td>
-                    <td>{{result[1]}}</td>
-                    <td>{{result[0]}}</td>
-                    <td>{{result[2]}}</td>
-                  </tr>
-                  {% endfor %}
-                  <tr>
-                    <td>...</td>
-                    <td>...</td>
-                    <td>...</td>
-                    <td>...</td>
-                  </tr>
-                </tbody>
-              </table>
+                View File
+              </button>
+              <div class="modal fade" id="modalPreprocessing">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Dataset After Preprocessing</h4>
+                      <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <table
+                        class="table table-responsive-lg table-bordered table-striped table-hoverd"
+                      >
+                        <thead>
+                          <tr>
+                            <th width="10%">.NO</th>
+                            <th width="65%">Message</th>
+                            <th width="10%">Label</th>
+                            <th width="15%">Num Class</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for result in res['pre_train_data'][:100] %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{result[1]}}</td>
+                            <td>{{result[0]}}</td>
+                            <td>{{result[2]}}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <canvas
+                id="chart-preprocessing"
+                width="800"
+                height="500"
+              ></canvas>
             </div>
             {% endif %}
           </div>
@@ -221,11 +243,12 @@
                     >Message</a
                   >
                 </li>
-                <li
-                  class="nav-item {{'active' if res['predict_result'] != None and res['predict_label'] == '' else
+                <li class="nav-item">
+                  <a
+                    class="nav-link {{'active' if res['predict_result'] != None and res['predict_label'] == '' else
                 ''}}"
-                >
-                  <a class="nav-link" data-toggle="tab" href="#predictFile"
+                    data-toggle="tab"
+                    href="#predictFile"
                     >File</a
                   >
                 </li>
@@ -244,13 +267,16 @@
                       id="predictLabel"
                       name="predictLabel"
                     >
-                  {{res['predict_label'] if res['predict_result'] != None else ''}}</textarea
+                  {%- if res['predict_result'] != None -%} 
+                  {{res['predict_label']}} 
+                  {%- endif -%}
+                  </textarea
                     >
                   </div>
                 </div>
                 <div
                   id="predictFile"
-                  class="container tab-pane px-0 pt-3 pb-5 fade {{'show active' if res['predict_result'] != None and res['predict_label'] == '' else
+                  class="container tab-pane px-0 pt-3 pb-3 fade {{'show active' if res['predict_result'] != None and res['predict_label'] == '' else
                   ''}}"
                 >
                   <div class="form-group">
@@ -268,6 +294,13 @@
                       >
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="previewFilePredict"
+                  >
+                    Preview
+                  </button>
                 </div>
               </div>
 
@@ -280,13 +313,50 @@
               >
               {% endif %} {% if res['predict_result'] != None and
               res['predict_label'] == '' %}
-              <!-- <button
-                id="reviewFileRes"
+              <button
+                data-toggle="modal"
+                data-target="#modalFilePredict"
                 type="button"
-                class="btn btn-secondary ml-3 mr-3"
+                class="btn btn-secondary mb-4"
               >
-                Review
-              </button> -->
+                View Result
+              </button>
+              <div class="modal fade" id="modalFilePredict">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Dataset After Preprocessing</h4>
+                      <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <table
+                        class="table table-responsive-lg table-bordered table-striped table-hoverd"
+                      >
+                        <thead>
+                          <tr>
+                            <th width="10%">.NO</th>
+                            <th width="65%">Message</th>
+                            <th width="10%">Label</th>
+                            <th width="15%">Num Class</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for result in res['pre_train_data'][:100] %}
+                          <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{result[1]}}</td>
+                            <td>{{result[0]}}</td>
+                            <td>{{result[2]}}</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {% endif %}
             </form>
           </div>
@@ -324,41 +394,47 @@
 
       var chartResult = {{ res['chart_result']| tojson }};
       if (chartResult) {
-        const labelData = chartResult.map(({ trainer }) => trainer);
-        const accScoreData = chartResult.map(
-          ({ result }) => result["accuracy"]
-        );
-        const precScoreData = chartResult.map(
-          ({ result }) => result["precision"]
-        );
-        const recallScoreData = chartResult.map(
-          ({ result }) => result["recall"]
-        );
-        const f1ScoreData = chartResult.map(({ result }) => result["f1_score"]);
+        const labelData = ["Accuracy", "Precision", "Recall", "F1-score"];
+        const mapValues = (obj) => {
+          let result = [];
+          for (const key in obj) {
+            console.log(key);
+
+            if (obj.hasOwnProperty(key)) {
+              const element = obj[key];
+              result.push(element)
+            }
+          }
+          return result;
+        }
         const COLORS = ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"];
         var barChartData = {
           labels: labelData,
-          datasets: [
-            {
-              label: "Accuracy",
-              backgroundColor: COLORS[0],
-              data: accScoreData,
-            },
-            {
-              label: "Precision",
-              backgroundColor: COLORS[1],
-              data: precScoreData,
-            },
-            {
-              label: "Recall",
-              backgroundColor: COLORS[2],
-              data: recallScoreData,
-            },
-            {
-              label: "F1-score",
-              backgroundColor: COLORS[3],
-              data: f1ScoreData,
-            },
+          datasets: [{
+            label: chartResult[0].trainer,
+            backgroundColor: COLORS[0],
+            data: mapValues(chartResult[0].result),
+          },
+          {
+            label: chartResult[1].trainer,
+            backgroundColor: COLORS[1],
+            data: mapValues(chartResult[1].result),
+          },
+          {
+            label: chartResult[2].trainer,
+            backgroundColor: COLORS[2],
+            data: mapValues(chartResult[2].result),
+          },
+          {
+            label: chartResult[3].trainer,
+            backgroundColor: COLORS[3],
+            data: mapValues(chartResult[3].result),
+          },
+          {
+            label: chartResult[4].trainer,
+            backgroundColor: COLORS[4],
+            data: mapValues(chartResult[4].result),
+          }
           ],
         };
 
@@ -410,6 +486,81 @@
         };
 
         new Chart($("#bar-chart"), {
+          type: "bar",
+          data: barChartData,
+          options: chartOptions,
+        });
+      }
+
+
+      var chartPreprocessing = {{ res['chart_preprocessing']| tojson }};
+      if(chartPreprocessing) {
+        const labelData = ["Train", "Test"];
+        const COLORS = ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"];
+        var barChartData = {
+          labels: labelData,
+          datasets: [{
+            label: 'ham',
+            backgroundColor: COLORS[0],
+            data: chartPreprocessing.map(({ham})=>ham),
+          },
+          {
+            label: 'spam',
+            backgroundColor: COLORS[1],
+            data: chartPreprocessing.map(({spam})=>spam),
+          }
+          ],
+        };
+
+        var chartOptions = {
+          responsive: true,
+          legend: {
+            position: "bottom",
+            padding: 10,
+          },
+          title: {
+            display: true,
+            text: "Preprocessing Visualization",
+            fontSize: 22,
+            lineHeight: 1.5,
+            paddingBottom: '2em'
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+          animation: {
+            duration: 1,
+            onComplete: function () {
+              var chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+
+              ctx.font = Chart.helpers.fontString(
+                "20px",
+                Chart.defaults.global.defaultFontStyle,
+                Chart.defaults.global.defaultFontFamily
+              );
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+              // ctx.fillStyle = "white";
+
+              this.data.datasets.forEach(function (dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function (bar, index) {
+                  var data = dataset.data[index];
+                  ctx.fillText(data, bar._model.x, bar._model.y -5);
+                });
+              });
+            },
+          },
+        };
+
+        new Chart($("#chart-preprocessing"), {
           type: "bar",
           data: barChartData,
           options: chartOptions,

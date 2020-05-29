@@ -56,8 +56,7 @@ def for_dataset(path_file):
     pickle.dump(vectorizer, open(vec_file, 'wb'))
     # Performing test train Split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.20, train_size=0.80, random_state=None)
-    
+        X, y, test_size=0.20, train_size=0.80, random_state=0)
 
     return X_train, X_test, y_train, y_test, output
 
@@ -78,7 +77,7 @@ def for_dataset_lstm(path_file):
 
     Y = Y.reshape(-1, 1)
     X_train, X_test, y_train, y_test = train_test_split(
-        X, Y, random_state=1, test_size=0.2)
+        X, Y, random_state=0, test_size=0.2)
 
     max_words = 10000
     max_len = 200

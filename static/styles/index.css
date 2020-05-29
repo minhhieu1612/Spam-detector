@@ -76,7 +76,7 @@ img {
 .preprocessing-step {
   list-style: none;
   padding-left: 1.5em;
-  min-height: 30em;
+  min-height: 20em;
 }
 .preprocessing-step li {
   list-style: none;
@@ -116,7 +116,11 @@ img {
     background-image: url("../images/connector.gif");
   }
 }
-.pre-train-dataset table {
+/* .pre-train-dataset {
+  height: 20em;
+  overflow-y: scroll;
+} */
+.pre-train-dataset {
   display: none;
   animation-name: fadeIn;
   animation-duration: 5s;
